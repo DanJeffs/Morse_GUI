@@ -5,9 +5,30 @@
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
-
 import PyQt5
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+import RPi.GPIO as GPIO
+import time
+
+#GPIO Setup and Config 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(27, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+timer = 0.25
+
+#initialize GPIO to low
+GPIO.output(17,GPIO.LOW)
+GPIO.output(22,GPIO.LOW)
+GPIO.output(27,GPIO.LOW)
+
+
+
+ditTime = 100;
+dashTime = ditTime * 3;
+spaceTime = ditTime * 7;
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -58,20 +79,20 @@ class Ui_MainWindow(object):
         self.exitButton = QtWidgets.QPushButton(self.centralwidget)
         self.exitButton.setGeometry(QtCore.QRect(190, 290, 91, 31))
         self.exitButton.setObjectName("exitButton")
-        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(60, 140, 361, 51))
+        self.inputBox = QtWidgets.QLineEdit(self.centralwidget)
+        self.inputBox.setGeometry(QtCore.QRect(60, 140, 361, 51))
         font = QtGui.QFont()
         font.setPointSize(24)
-        self.lineEdit.setFont(font)
-        self.lineEdit.setText("")
-        self.lineEdit.setObjectName("lineEdit")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(150, 200, 171, 41))
+        self.inputBox.setFont(font)
+        self.inputBox.setText("")
+        self.inputBox.setObjectName("inputBox")
+        self.convertButton = QtWidgets.QPushButton(self.centralwidget)
+        self.convertButton.setGeometry(QtCore.QRect(150, 200, 171, 41))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
+        self.convertButton.setFont(font)
+        self.convertButton.setObjectName("convertButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 481, 21))
@@ -90,6 +111,15 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.redButton.clicked.connect(self.redLed)
+        self.yellowButton.clicked.connect(self.yellowLed)
+        self.greenButton.clicked.connect(self.greenLed)
+        self.allOnButton.clicked.connect(self.allOn)
+        self.allOffButton.clicked.connect(self.allOff)
+        self.exitButton.clicked.connect(self.exit)
+        self.actionExit.triggered.connect(self.exit)
+        self.convertButton.clicked.connect(self.ledToggle)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Traffic Lights"))
@@ -99,10 +129,49 @@ class Ui_MainWindow(object):
         self.allOffButton.setText(_translate("MainWindow", "All Off"))
         self.allOnButton.setText(_translate("MainWindow", "All On"))
         self.exitButton.setText(_translate("MainWindow", "Exit"))
-        self.pushButton.setText(_translate("MainWindow", "Convert to Morse"))
+        self.convertButton.setText(_translate("MainWindow", "Convert to Morse"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
         self.actionExit.setShortcut(_translate("MainWindow", "Ctrl+X"))
+
+    def exit(self):
+        GPIO.output(17,GPIO.LOW)
+        GPIO.output(22,GPIO.LOW)
+        GPIO.output(27,GPIO.LOW)
+        QtCore.QCoreApplication.instance().quit()
+
+    #Functions for LED interactions
+    def redLed(self):
+        GPIO.output(22,GPIO.HIGH)
+        GPIO.output(27,GPIO.LOW)
+        GPIO.output(17,GPIO.LOW)
+
+    def yellowLed(self):
+        GPIO.output(27,GPIO.HIGH)
+        GPIO.output(22,GPIO.LOW)
+        GPIO.output(17,GPIO.LOW)
+
+    def allOn(self):
+        GPIO.output(17,GPIO.HIGH)
+        GPIO.output(22,GPIO.HIGH)
+        GPIO.output(27,GPIO.HIGH)
+
+    def allOff(self):
+        GPIO.output(17,GPIO.LOW)
+        GPIO.output(22,GPIO.LOW)
+        GPIO.output(27,GPIO.LOW)
+
+    def greenLed(self):
+        GPIO.output(17,GPIO.HIGH)
+        GPIO.output(22,GPIO.LOW)
+        GPIO.output(27,GPIO.LOW)
+
+    #Alphabet
+    def ledToggle(self):
+        if GPIO.input(17):
+            GPIO.output(17, GPIO.LOW)
+        else:
+            GPIO.output(17, GPIO.HIGH)
 
 
 if __name__ == "__main__":
@@ -114,3 +183,5 @@ if __name__ == "__main__":
     MainWindow.show()
     sys.exit(app.exec_())
 
+    
+    

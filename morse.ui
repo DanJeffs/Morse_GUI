@@ -127,7 +127,7 @@
      <string>Exit</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="inputBox">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -145,7 +145,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="convertButton">
     <property name="geometry">
      <rect>
       <x>150</x>
