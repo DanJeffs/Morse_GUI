@@ -6,29 +6,15 @@
 #
 # WARNING! All changes made in this file will be lost!
 import PyQt5
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import RPi.GPIO as GPIO
 import time
+import PiLeds as led
+import alphabetPi as alpha
 
-#GPIO Setup and Config 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.OUT)
-GPIO.setup(27, GPIO.OUT)
-GPIO.setup(22, GPIO.OUT)
-timer = 0.25
+led.setup()
 
-#initialize GPIO to low
-GPIO.output(17,GPIO.LOW)
-GPIO.output(22,GPIO.LOW)
-GPIO.output(27,GPIO.LOW)
-
-
-
-ditTime = 100;
-dashTime = ditTime * 3;
-spaceTime = ditTime * 7;
+name = "BOB"
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -111,15 +97,15 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.redButton.clicked.connect(self.redLed)
-        self.yellowButton.clicked.connect(self.yellowLed)
-        self.greenButton.clicked.connect(self.greenLed)
-        self.allOnButton.clicked.connect(self.allOn)
-        self.allOffButton.clicked.connect(self.allOff)
+        self.redButton.clicked.connect(led.redLed)
+        self.yellowButton.clicked.connect(led.yellowLed)
+        self.greenButton.clicked.connect(led.greenLed)
+        self.allOnButton.clicked.connect(led.allOn)
+        self.allOffButton.clicked.connect(led.allOff)
         self.exitButton.clicked.connect(self.exit)
         self.actionExit.triggered.connect(self.exit)
-        self.convertButton.clicked.connect(self.ledToggle)
-
+        self.convertButton.clicked.connect(self.convert)
+        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Traffic Lights"))
@@ -140,38 +126,41 @@ class Ui_MainWindow(object):
         GPIO.output(27,GPIO.LOW)
         QtCore.QCoreApplication.instance().quit()
 
-    #Functions for LED interactions
-    def redLed(self):
-        GPIO.output(22,GPIO.HIGH)
-        GPIO.output(27,GPIO.LOW)
-        GPIO.output(17,GPIO.LOW)
+    def convert(self):
+        name = self.inputBox.text().upper()
+        for i in name:
+            alphabet[i](self)
+            alpha.newLetter(self)
 
-    def yellowLed(self):
-        GPIO.output(27,GPIO.HIGH)
-        GPIO.output(22,GPIO.LOW)
-        GPIO.output(17,GPIO.LOW)
-
-    def allOn(self):
-        GPIO.output(17,GPIO.HIGH)
-        GPIO.output(22,GPIO.HIGH)
-        GPIO.output(27,GPIO.HIGH)
-
-    def allOff(self):
-        GPIO.output(17,GPIO.LOW)
-        GPIO.output(22,GPIO.LOW)
-        GPIO.output(27,GPIO.LOW)
-
-    def greenLed(self):
-        GPIO.output(17,GPIO.HIGH)
-        GPIO.output(22,GPIO.LOW)
-        GPIO.output(27,GPIO.LOW)
-
-    #Alphabet
-    def ledToggle(self):
-        if GPIO.input(17):
-            GPIO.output(17, GPIO.LOW)
-        else:
-            GPIO.output(17, GPIO.HIGH)
+alphabet = {
+    "A": alpha.A,
+    "B": alpha.B,
+    "C": alpha.C,
+    "D": alpha.D,
+    "E": alpha.E,
+    "F": alpha.F,
+    "G": alpha.G,
+    "H": alpha.H,
+    "I": alpha.I,
+    "J": alpha.J,
+    "K": alpha.K,
+    "L": alpha.L,
+    "M": alpha.M,
+    "N": alpha.N,
+    "O": alpha.O,
+    "P": alpha.P,
+    "Q": alpha.Q,
+    "R": alpha.R,
+    "S": alpha.S,
+    "T": alpha.T,
+    "U": alpha.U,
+    "V": alpha.V,
+    "W": alpha.W,
+    "X": alpha.X,
+    "Y": alpha.Y,
+    "Z": alpha.Z,
+    " ": alpha.space
+}
 
 
 if __name__ == "__main__":
