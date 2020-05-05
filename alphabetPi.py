@@ -24,6 +24,7 @@ def space(self):
 def newLetter(self):
     time.sleep(dashTime)
 
+#Define a function for each letter
 #    "A" : ".-"
 def A(self):
     dit(self)
