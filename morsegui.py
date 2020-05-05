@@ -5,6 +5,7 @@
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
+
 import PyQt5
 from PyQt5 import QtCore, QtGui, QtWidgets
 import RPi.GPIO as GPIO
@@ -132,6 +133,7 @@ class Ui_MainWindow(object):
             alphabet[i](self)
             alpha.newLetter(self)
 
+#Switch for each letter from the convert function
 alphabet = {
     "A": alpha.A,
     "B": alpha.B,
